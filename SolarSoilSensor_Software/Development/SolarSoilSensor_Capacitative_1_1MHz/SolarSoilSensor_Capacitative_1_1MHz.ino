@@ -37,22 +37,9 @@
   Mode is stored into EEPROM
 
   Modes:
-  Pressing and holding the 'SET' button (for more than 1 second) will cause the unit to cycle through the three modes. 
-  Each time the next mode is entered then there will be a beep(s). The number of beeps indicates the mode the unit is in. 
-  Release the 'SET' button when you are in the correct mode.
+  1 = Mositure Sensor with sound
 
-  Mode 1: Flash and 'Chirp' on under-water
-  The unit will wake up every 8 seconds and check the moisture level.
-  If the moisture level is a bit below the set level (set as explained above), then the unit will 'Chirp' with a rising tone. This means 'water me!'. 
-  The LED will also flash.
-  The 'Chirp' will only happen when there is sunlight available (to stop it beeping through the night!).
-
-  Mode 2: Flash ONLY
-  This is the quiet mode. It will never 'chirp' but just flash if under-watered.
-
-  Mode 3: Flash and 'Chirp' on under-watered AND over-watered
-  This mode is similar to Mode 1 and does the same operation as Mode 1. It also checks for over-watering. 
-  If the plant is over-watered then the unit will do a falling 'Chirp'.
+  2 = Mositure Sensor no sound
 
   TO DO:
 
@@ -98,7 +85,7 @@ long int number;
 long int soilReading;
 int soilSamples = 20;
 int soilSetpoint;
-int soilDifference = 75;
+int soilDifference = 50;
 
 int sleep_time = 9; // 0=16ms, 1=32ms,2=64ms,3=128ms,4=250ms,5=500ms
                     // 6=1 sec,7=2 sec, 8=4 sec, 9= 8sec
@@ -237,11 +224,13 @@ void loop() {
       pinMode(SOIL_READ, INPUT);
       digitalWrite(SOIL_POWER, HIGH);
       soilReading = 0;           // Reset the value
-      delay(5);    // Wait for settling
+
+      delay(10);    // Wait for settling
+
       for (int n = 0; n <= soilSamples; n++)
       {
         soilReading += analogRead(SOIL_READ);
-        delay(5);
+        delay(10);
       }
       soilReading = soilReading / soilSamples;    // This is the soil moisture reading
       pinMode(SOIL_READ, OUTPUT);
